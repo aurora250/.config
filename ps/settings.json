@@ -1,0 +1,470 @@
+{
+    "$help": "https://aka.ms/terminal-documentation",
+    "$schema": "https://aka.ms/terminal-profiles-schema",
+    "actions": 
+    [
+        {
+            "command": 
+            {
+                "action": "copy",
+                "singleLine": false
+            },
+            "id": "User.copy.644BA8F2"
+        },
+        {
+            "command": "paste",
+            "id": "User.paste"
+        },
+        {
+            "command": "find",
+            "id": "User.find"
+        },
+        {
+            "command": 
+            {
+                "action": "splitPane",
+                "split": "auto",
+                "splitMode": "duplicate"
+            },
+            "id": "User.splitPane.A6751878"
+        },
+        {
+            "command": 
+            {
+                "action": "moveFocus",
+                "direction": "left"
+            },
+            "id": "User.dsh.focusLeft"
+        },
+        {
+            "command": 
+            {
+                "action": "moveFocus",
+                "direction": "right"
+            },
+            "id": "User.dsh.focusRight"
+        },
+        {
+            "command": 
+            {
+                "action": "moveFocus",
+                "direction": "up"
+            },
+            "id": "User.dsh.focusUp"
+        },
+        {
+            "command": 
+            {
+                "action": "moveFocus",
+                "direction": "down"
+            },
+            "id": "User.dsh.focusDown"
+        },
+        {
+            "command": 
+            {
+                "action": "resizePane",
+                "direction": "left"
+            },
+            "id": "User.dsh.resizeLeft"
+        },
+        {
+            "command": 
+            {
+                "action": "resizePane",
+                "direction": "right"
+            },
+            "id": "User.dsh.resizeRight"
+        },
+        {
+            "command": 
+            {
+                "action": "resizePane",
+                "direction": "up"
+            },
+            "id": "User.dsh.resizeUp"
+        },
+        {
+            "command": 
+            {
+                "action": "resizePane",
+                "direction": "down"
+            },
+            "id": "User.dsh.resizeDown"
+        },
+        {
+            "command": 
+            {
+                "action": "splitPane",
+                "split": "left",
+                "splitMode": "duplicate"
+            },
+            "id": "User.dsh.splitLeft"
+        },
+        {
+            "command": 
+            {
+                "action": "splitPane",
+                "split": "right",
+                "splitMode": "duplicate"
+            },
+            "id": "User.dsh.splitRight"
+        },
+        {
+            "command": 
+            {
+                "action": "splitPane",
+                "split": "up",
+                "splitMode": "duplicate"
+            },
+            "id": "User.dsh.splitUp"
+        },
+        {
+            "command": 
+            {
+                "action": "splitPane",
+                "split": "down",
+                "splitMode": "duplicate"
+            },
+            "id": "User.dsh.splitDown"
+        },
+        {
+            "command": "togglePaneZoom",
+            "id": "User.dsh.zoom"
+        },
+        {
+            "command": "closePane",
+            "id": "User.dsh.closePane"
+        },
+        {
+            "command": "toggleBroadcastInput",
+            "id": "User.dsh.broadcast"
+        },
+        {
+            "command": "duplicateTab",
+            "id": "User.dsh.dupTab"
+        },
+        {
+            "command": "toggleMarkMode",
+            "id": "User.dsh.markMode"
+        },
+        {
+            "command": "commandPalette",
+            "id": "User.dsh.palette"
+        },
+        {
+            "command": "prevTab",
+            "id": "User.dsh.prevTab"
+        },
+        {
+            "command": "nextTab",
+            "id": "User.dsh.nextTab"
+        },
+        {
+            "command": 
+            {
+                "action": "switchToTab",
+                "index": 0
+            },
+            "id": "User.dsh.tab1"
+        },
+        {
+            "command": 
+            {
+                "action": "switchToTab",
+                "index": 1
+            },
+            "id": "User.dsh.tab2"
+        },
+        {
+            "command": 
+            {
+                "action": "switchToTab",
+                "index": 2
+            },
+            "id": "User.dsh.tab3"
+        },
+        {
+            "command": 
+            {
+                "action": "switchToTab",
+                "index": 3
+            },
+            "id": "User.dsh.tab4"
+        },
+        {
+            "command": 
+            {
+                "action": "switchToTab",
+                "index": 4
+            },
+            "id": "User.dsh.tab5"
+        },
+        {
+            "command": 
+            {
+                "action": "switchToTab",
+                "index": 5
+            },
+            "id": "User.dsh.tab6"
+        },
+        {
+            "command": 
+            {
+                "action": "switchToTab",
+                "index": 6
+            },
+            "id": "User.dsh.tab7"
+        },
+        {
+            "command": 
+            {
+                "action": "switchToTab",
+                "index": 7
+            },
+            "id": "User.dsh.tab8"
+        },
+        {
+            "command": 
+            {
+                "action": "switchToTab",
+                "index": 8
+            },
+            "id": "User.dsh.tab9"
+        }
+    ],
+    "copyFormatting": "none",
+    "copyOnSelect": false,
+    "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+    "keybindings": 
+    [
+        {
+            "id": "User.copy.644BA8F2",
+            "keys": "ctrl+c"
+        },
+        {
+            "id": "User.paste",
+            "keys": "ctrl+v"
+        },
+        {
+            "id": "User.find",
+            "keys": "ctrl+shift+f"
+        },
+        {
+            "id": "User.splitPane.A6751878",
+            "keys": "alt+shift+d"
+        },
+        {
+            "id": "User.dsh.focusLeft",
+            "keys": "alt+n"
+        },
+        {
+            "id": "User.dsh.focusRight",
+            "keys": "alt+i"
+        },
+        {
+            "id": "User.dsh.focusUp",
+            "keys": "alt+u"
+        },
+        {
+            "id": "User.dsh.focusDown",
+            "keys": "alt+e"
+        },
+        {
+            "id": "User.dsh.resizeLeft",
+            "keys": "alt+shift+n"
+        },
+        {
+            "id": "User.dsh.resizeRight",
+            "keys": "alt+shift+i"
+        },
+        {
+            "id": "User.dsh.resizeUp",
+            "keys": "alt+shift+u"
+        },
+        {
+            "id": "User.dsh.resizeDown",
+            "keys": "alt+shift+e"
+        },
+        {
+            "id": "User.dsh.splitLeft",
+            "keys": "ctrl+alt+n"
+        },
+        {
+            "id": "User.dsh.splitRight",
+            "keys": "ctrl+alt+i"
+        },
+        {
+            "id": "User.dsh.splitUp",
+            "keys": "ctrl+alt+u"
+        },
+        {
+            "id": "User.dsh.splitDown",
+            "keys": "ctrl+alt+e"
+        },
+        {
+            "id": "User.dsh.zoom",
+            "keys": "alt+f"
+        },
+        {
+            "id": "User.dsh.closePane",
+            "keys": "alt+shift+q"
+        },
+        {
+            "id": "User.dsh.broadcast",
+            "keys": "alt+g"
+        },
+        {
+            "id": "User.dsh.dupTab",
+            "keys": "alt+o"
+        },
+        {
+            "id": "User.dsh.markMode",
+            "keys": "alt+v"
+        },
+        {
+            "id": "User.dsh.palette",
+            "keys": "alt+w"
+        },
+        {
+            "id": "User.dsh.prevTab",
+            "keys": "alt+l"
+        },
+        {
+            "id": "User.dsh.nextTab",
+            "keys": "alt+y"
+        },
+        {
+            "id": "User.dsh.tab1",
+            "keys": "alt+1"
+        },
+        {
+            "id": "User.dsh.tab2",
+            "keys": "alt+2"
+        },
+        {
+            "id": "User.dsh.tab3",
+            "keys": "alt+3"
+        },
+        {
+            "id": "User.dsh.tab4",
+            "keys": "alt+4"
+        },
+        {
+            "id": "User.dsh.tab5",
+            "keys": "alt+5"
+        },
+        {
+            "id": "User.dsh.tab6",
+            "keys": "alt+6"
+        },
+        {
+            "id": "User.dsh.tab7",
+            "keys": "alt+7"
+        },
+        {
+            "id": "User.dsh.tab8",
+            "keys": "alt+8"
+        },
+        {
+            "id": "User.dsh.tab9",
+            "keys": "alt+9"
+        }
+    ],
+    "language": "zh-Hans",
+    "newTabMenu": 
+    [
+        {
+            "type": "remainingProfiles"
+        }
+    ],
+    "profiles": 
+    {
+        "defaults": 
+        {
+            "colorScheme": "Tomorrow Night (dsh)",
+            "font": 
+            {
+                "face": "MesloLGSDZ Nerd Font Mono",
+                "size": 12
+            },
+            "historySize": 10000,
+            "opacity": 45,
+            "padding": "8",
+            "useAcrylic": true
+        },
+        "list": 
+        [
+            {
+                "commandline": "D:\\PowerShell\\pwsh.exe",
+                "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+                "hidden": false,
+                "name": "PowerShell",
+                "startingDirectory": "%USERPROFILE%"
+            },
+            {
+                "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+                "hidden": false,
+                "name": "Windows PowerShell"
+            },
+            {
+                "commandline": "%SystemRoot%\\System32\\cmd.exe",
+                "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+                "hidden": false,
+                "name": "\u547d\u4ee4\u63d0\u793a\u7b26"
+            },
+            {
+                "guid": "{a7d22554-4add-54eb-98fb-6ebf608368c9}",
+                "hidden": false,
+                "name": "Developer Command Prompt for VS 2022",
+                "source": "Windows.Terminal.VisualStudio"
+            },
+            {
+                "guid": "{78f7cf22-17aa-5e5c-9ba3-79184d163436}",
+                "hidden": false,
+                "name": "Developer PowerShell for VS 2022",
+                "source": "Windows.Terminal.VisualStudio"
+            },
+            {
+                "guid": "{a5a97cb8-8961-5535-816d-772efe0c6a3f}",
+                "hidden": false,
+                "name": "Arch",
+                "source": "Windows.Terminal.Wsl"
+            },
+            {
+                "guid": "{78b3455a-53d6-5eb1-a93f-c83db8581468}",
+                "hidden": false,
+                "name": "Ubuntu",
+                "source": "Microsoft.WSL"
+            }
+        ]
+    },
+    "schemes": 
+    [
+        {
+            "name": "Tomorrow Night (dsh)",
+            "background": "#232530",
+            "foreground": "#C5C8C6",
+            "cursorColor": "#B294BB",
+            "selectionBackground": "#2D2F3A",
+            "black": "#232530",
+            "red": "#CC6666",
+            "green": "#B5BD68",
+            "yellow": "#F0C674",
+            "blue": "#81A2BE",
+            "purple": "#B294BB",
+            "cyan": "#8ABEB7",
+            "white": "#C5C8C6",
+            "brightBlack": "#707880",
+            "brightRed": "#CC6666",
+            "brightGreen": "#B5BD68",
+            "brightYellow": "#F0C674",
+            "brightBlue": "#81A2BE",
+            "brightPurple": "#B294BB",
+            "brightCyan": "#8ABEB7",
+            "brightWhite": "#FFFFFF"
+        }
+    ],
+    "themes": []
+}
