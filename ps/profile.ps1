@@ -56,7 +56,7 @@ try {
     }
 }
 catch {
-    Write-Verbose "PSReadLine 配置跳过: $_"
+    Write-Verbose "PSReadLine config skip: $_"
 }
 
 # ------------------------------------------------------------
@@ -154,7 +154,7 @@ try {
     Set-PSReadLineKeyHandler -Key 'Backspace'         -ScriptBlock { param($key, $arg) Invoke-DshBackwardDeleteChar $key }
 }
 catch {
-    Write-Verbose "自动配对绑定跳过: $_"
+    Write-Verbose "auto bind skip: $_"
 }
 
 # ------------------------------------------------------------
@@ -179,7 +179,7 @@ try {
                     -TabExpansion
 }
 catch {
-    Write-Verbose "PSFzf 未安装，跳过: $_"
+    Write-Verbose "PSFzf not installed, skip: $_"
 }
 
 # ------------------------------------------------------------
@@ -220,7 +220,7 @@ if (Get-Command zoxide -ErrorAction SilentlyContinue) {
 function gr {
     $root = git rev-parse --show-toplevel 2>$null
     if ($LASTEXITCODE -ne 0 -or -not $root) {
-        Write-Error 'gr: 不在 git 仓库中'
+        Write-Error 'gr: not in git repo'
         return
     }
     Set-Location $root

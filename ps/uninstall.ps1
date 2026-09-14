@@ -33,7 +33,7 @@ function Restore-NewestBackup([string]$Path) {
            Sort-Object LastWriteTime -Descending | Select-Object -First 1
     if ($bak) {
         Copy-Item $bak.FullName $Path -Force
-        Write-Info "已还原 ← $($bak.Name)"
+        Write-Info "recovered ← $($bak.Name)"
         return $true
     }
     return $false
@@ -42,7 +42,7 @@ function Restore-NewestBackup([string]$Path) {
 # ------------------------------------------------------------
 #  1. Windows Terminal 设置
 # ------------------------------------------------------------
-Write-Step 'Windows Terminal 设置'
+Write-Step 'Windows Terminal config'
 $wt = @()
 $wt += Get-ChildItem (Join-Path $env:LOCALAPPDATA 'Packages') -Directory -ErrorAction SilentlyContinue |
        Where-Object { $_.Name -like 'Microsoft.WindowsTerminal*' } |
@@ -51,10 +51,10 @@ $wt += Join-Path $env:LOCALAPPDATA 'Microsoft\Windows Terminal\settings.json'
 $wt = $wt | Where-Object { Test-Path $_ } | Select-Object -First 1
 if ($wt) {
     if (-not (Restore-NewestBackup $wt)) {
-        Write-Warn '没找到备份；请手动检查 settings.json 里的字体/opacity/键位/默认 profile'
+        Write-Warn 'no backup found: please check font/opacity/key/default-profile in settings.json'
     }
 }
-else { Write-Warn '没找到 Windows Terminal 的 settings.json' }
+else { Write-Warn 'settings.json not found in Windows Terminal' }
 
 # ------------------------------------------------------------
 #  2. $PROFILE
@@ -64,39 +64,38 @@ $prof = $PROFILE.CurrentUserCurrentHost
 if (Test-Path $prof) {
     if (-not (Restore-NewestBackup $prof)) {
         Remove-Item $prof -Force
-        Write-Info "已删除 $prof（无备份可还原）"
+        Write-Info "deleted $prof"
     }
 }
-else { Write-Info '不存在，跳过' }
+else { Write-Info 'skip' }
 
 # ------------------------------------------------------------
 #  3. oh-my-posh 主题
 # ------------------------------------------------------------
-Write-Step 'oh-my-posh 主题'
+Write-Step 'oh-my-posh theme'
 if (Test-Path $ThemeFile) {
     Remove-Item $ThemeFile -Force
-    Write-Info "已删除 $ThemeFile"
+    Write-Info "deleted $ThemeFile"
     if (-not (Get-ChildItem $ThemesDir -Force -ErrorAction SilentlyContinue)) {
         Remove-Item $ThemesDir -Force -ErrorAction SilentlyContinue
-        Write-Info '空目录一并删除'
     }
 }
-else { Write-Info '不存在，跳过' }
+else { Write-Info 'skip' }
 
 # ------------------------------------------------------------
 #  4. 可选清理
 # ------------------------------------------------------------
 if ($PurgeTools) {
-    Write-Step '工具目录'
+    Write-Step 'tool dir'
     if (Test-Path $ToolsDir) {
         Remove-Item $ToolsDir -Recurse -Force -ErrorAction SilentlyContinue
-        Write-Info "已删除 $ToolsDir"
+        Write-Info "deleted $ToolsDir"
     }
-    else { Write-Info '不存在，跳过' }
+    else { Write-Info 'skip' }
 }
 
 if ($PurgeFont) {
-    Write-Step '用户字体'
+    Write-Step 'user font'
     $files = @(Get-ChildItem $UserFontDir -Filter 'Meslo*' -ErrorAction SilentlyContinue)
     foreach ($f in $files) {
         if (Test-Path $FontRegKey) {
@@ -106,21 +105,21 @@ if ($PurgeFont) {
         }
         Remove-Item $f.FullName -Force -ErrorAction SilentlyContinue
     }
-    Write-Info "已移除 $($files.Count) 个字体文件与其注册项（注销后彻底生效）"
+    Write-Info "removed $($files.Count) files and its registry keys"
 }
 
 if ($PurgeModules) {
-    Write-Step 'PSFzf 模块'
+    Write-Step 'PSFzf module'
     $mods = @(Get-ChildItem (Join-Path $env:USERPROFILE 'Documents\PowerShell\Modules') -Directory -Filter 'PSFzf' -ErrorAction SilentlyContinue)
-    foreach ($m in $mods) { Remove-Item $m.FullName -Recurse -Force -ErrorAction SilentlyContinue; Write-Info "已删除 $($m.FullName)" }
-    if (-not $mods) { Write-Info '不存在，跳过' }
+    foreach ($m in $mods) { Remove-Item $m.FullName -Recurse -Force -ErrorAction SilentlyContinue; Write-Info "deleted $($m.FullName)" }
+    if (-not $mods) { Write-Info 'skip' }
 }
 
 if ($RestoreColorPrevalence) {
-    Write-Step '恢复"在标题栏和窗口边框上显示主题色"'
+    Write-Step 'recover theme color show'
     Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\DWM' -Name ColorPrevalence -Value 1 -Type DWord -Force
-    Write-Info 'DWM\ColorPrevalence = 1（注销后完全生效）'
+    Write-Info 'DWM\ColorPrevalence = 1'
 }
 
-Write-Step '完成'
-Write-Info '重新打开 Windows Terminal 生效'
+Write-Step 'finished'
+Write-Info 'reopen Windows Terminal to take effect'

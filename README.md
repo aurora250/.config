@@ -1,6 +1,6 @@
 # .config
 
-一套 zsh + tmux 个人终端配置（另含 PowerShell 7 + Windows Terminal 的原生移植版，见 [`ps/`](ps/README.md)）
+一套个人终端配置
 
 ---
 
@@ -21,11 +21,11 @@ zsh-config/
 ```
 
 ```
-ps/                                PowerShell 7 + Windows Terminal 版（不使用 WSL）
-├── README.md                      分层对照表、键位、已知差异
-├── install.ps1                    安装（幂等，可分层跳过）
+ps/                                PowerShell 7 + Windows Terminal
+├── README.md                      分层对照表、键位
+├── install.ps1                    安装
 ├── uninstall.ps1                  回滚
-├── profile.ps1                    可复用 $PROFILE
+├── profile.ps1                    $PROFILE
 ├── agnoster-dsh.omp.json          oh-my-posh 主题
 └── settings.json                  Windows Terminal 配置参考
 ```
@@ -111,7 +111,6 @@ pwsh -File ps\uninstall.ps1 -PurgeTools -PurgeFont -PurgeModules
 | `terminal-overrides`             | `,*256col*:Tc`  |                                                        |
 
 ### 进阶项
-
 
 | 项                 | 说明                                                                                                           |
 | ------------------ | -------------------------------------------------------------------------------------------------------------- |

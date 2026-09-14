@@ -97,11 +97,11 @@ $WingetPkgs = [ordered]@{
 
 $ManualSources = [ordered]@{
     'oh-my-posh' = 'https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-windows-amd64.exe'
-    'fzf'        = 'https://github.com/junegunn/fzf/releases   （取 fzf-*-windows_amd64.zip，解出 fzf.exe）'
-    'zoxide'     = 'https://github.com/ajeetdsouza/zoxide/releases （取 zoxide-*-x86_64-pc-windows-msvc.zip）'
-    'fd'         = 'https://github.com/sharkdp/fd/releases    （取 fd-*-x86_64-pc-windows-msvc.zip）'
-    'bat'        = 'https://github.com/sharkdp/bat/releases   （取 bat-*-x86_64-pc-windows-msvc.zip）'
-    'rg'         = 'https://github.com/BurntSushi/ripgrep/releases （取 ripgrep-*-x86_64-pc-windows-msvc.zip）'
+    'fzf'        = 'https://github.com/junegunn/fzf/releases'
+    'zoxide'     = 'https://github.com/ajeetdsouza/zoxide/releases'
+    'fd'         = 'https://github.com/sharkdp/fd/releases'
+    'bat'        = 'https://github.com/sharkdp/bat/releases'
+    'rg'         = 'https://github.com/BurntSushi/ripgrep/releases'
 }
 
 # ------------------------------------------------------------
@@ -158,7 +158,7 @@ function Install-NerdFontZip([string]$ZipPath, [string]$Like) {
     Expand-Archive -LiteralPath $ZipPath -DestinationPath $ex -Force
     $ttf = @(Get-ChildItem $ex -Recurse -Filter '*.ttf' | Where-Object { $_.Name -like $Like })
     if (-not $ttf) { $ttf = @(Get-ChildItem $ex -Recurse -Filter '*.ttf') }
-    if (-not $ttf) { Write-Warn "压缩包里没有 ttf: $ZipPath"; return $false }
+    if (-not $ttf) { Write-Warn "no ttf in zip: $ZipPath"; return $false }
 
     New-Item -ItemType Directory -Force -Path $UserFontDir | Out-Null
     if (-not (Test-Path $FontRegKey)) { New-Item -Path $FontRegKey -Force | Out-Null }
@@ -201,8 +201,8 @@ public static extern IntPtr SendMessageTimeout(IntPtr hWnd, uint Msg, IntPtr wPa
         foreach ($f in $ttf) { $null = [Dsh.FontApi]::AddFontResourceW((Join-Path $UserFontDir $f.Name)) }
         $r = [IntPtr]::Zero
         [Dsh.FontApi]::SendMessageTimeout([IntPtr]0xffff, 0x001D, [IntPtr]::Zero, [IntPtr]::Zero, 2, 2000, [ref]$r) | Out-Null
-        Write-Info '已广播 WM_FONTCHANGE'
-    } catch { Write-Warn "立即加载字体失败（注销后仍会生效）: $($_.Exception.Message)" }
+        Write-Info 'broadcast WM_FONTCHANGE'
+    } catch { Write-Warn "load font immediately failed: $($_.Exception.Message)" }
 
     Remove-Item $ex -Recurse -Force -ErrorAction SilentlyContinue
     return $true
@@ -211,45 +211,45 @@ public static extern IntPtr SendMessageTimeout(IntPtr hWnd, uint Msg, IntPtr wPa
 # ------------------------------------------------------------
 #  0. 环境检查
 # ------------------------------------------------------------
-Write-Step '环境检查'
+Write-Step 'environment check'
 if ($PSVersionTable.PSVersion.Major -lt 7) {
-    Write-Bad "需要 PowerShell 7+，当前 $($PSVersionTable.PSVersion)"
+    Write-Bad "need PowerShell 7+, current version: $($PSVersionTable.PSVersion)"
     exit 1
 }
 Write-Info "PowerShell : $($PSVersionTable.PSVersion)  ($([Diagnostics.Process]::GetCurrentProcess().Path))"
-Write-Info "用户       : $env:USERNAME@$env:COMPUTERNAME"
+Write-Info "user       : $env:USERNAME@$env:COMPUTERNAME"
 $wtPath = Get-WtSettingsPath
-if ($wtPath) { Write-Info "WT 配置    : $wtPath" } else { Write-Warn '没找到 Windows Terminal 的 settings.json，-NoTerminal 会自动生效' }
+if ($wtPath) { Write-Info "WT config    : $wtPath" } else { Write-Warn 'settings.json of Windows Terminal not found, -NoTerminal will be used automatically' }
 
 # ------------------------------------------------------------
 #  1. $PROFILE
 # ------------------------------------------------------------
 Write-Step 'PowerShell profile'
 if ($NoProfile) {
-    Write-Info '-NoProfile，跳过'
+    Write-Info '-NoProfile, skip'
 }
 else {
     $src = Join-Path $Here 'profile.ps1'
     $dst = $PROFILE.CurrentUserCurrentHost
     if (-not (Test-Path $src)) {
-        Write-Bad "找不到 $src"
+        Write-Bad "$src not found"
     }
     else {
         New-Item -ItemType Directory -Force -Path (Split-Path $dst) | Out-Null
         if (Test-Path $dst) {
             if ((Get-FileHash $src).Hash -eq (Get-FileHash $dst).Hash) {
-                Write-Info '内容一致，无需改动'
+                Write-Info 'no need to change'
             }
             else {
                 $bak = Backup-File $dst
-                Write-Info "备份 → $bak"
+                Write-Info "backup → $bak"
                 Copy-Item $src $dst -Force
-                Write-Info "写入 $dst"
+                Write-Info "write $dst"
             }
         }
         else {
             Copy-Item $src $dst -Force
-            Write-Info "写入 $dst"
+            Write-Info "write $dst"
         }
     }
 }
@@ -257,40 +257,40 @@ else {
 # ------------------------------------------------------------
 #  2. oh-my-posh 主题
 # ------------------------------------------------------------
-Write-Step 'oh-my-posh 主题'
+Write-Step 'oh-my-posh theme'
 New-Item -ItemType Directory -Force -Path $ThemesDir | Out-Null
 $themeSrc = Join-Path $Here 'agnoster-dsh.omp.json'
 if (Test-Path $themeSrc) {
     Copy-Item $themeSrc $ThemeFile -Force
-    Write-Info "写入 $ThemeFile"
+    Write-Info "write $ThemeFile"
 }
-else { Write-Bad "找不到 $themeSrc" }
+else { Write-Bad "$themeSrc not found" }
 
 # ------------------------------------------------------------
 #  3. 工具链
 # ------------------------------------------------------------
-Write-Step '工具链'
+Write-Step 'toolchain'
 if ($NoTools) {
-    Write-Info '-NoTools，跳过'
-    foreach ($t in $WingetPkgs.Values) { if (-not (Get-Tool $t)) { Write-Note "缺少 $t" } }
+    Write-Info '-NoTools, skip'
+    foreach ($t in $WingetPkgs.Values) { if (-not (Get-Tool $t)) { Write-Note "need $t" } }
 }
 else {
     New-Item -ItemType Directory -Force -Path $ToolsDir | Out-Null
     $hasWinget = [bool](Get-Command winget -ErrorAction SilentlyContinue)
-    if (-not $hasWinget) { Write-Warn '找不到 winget，只能手动下载（见文末清单）' }
+    if (-not $hasWinget) { Write-Warn 'winget not found, please download packages manually' }
 
     foreach ($id in $WingetPkgs.Keys) {
         $exe = $WingetPkgs[$id]
-        if (Get-Tool $exe) { Write-Info "$exe 已就位"; continue }
+        if (Get-Tool $exe) { Write-Info "$exe ready"; continue }
         if (-not $hasWinget) { continue }
         Write-Info "winget install $id …"
         $ok = $false
         for ($i = 1; $i -le 2 -and -not $ok; $i++) {
             $null = winget install -e --id $id --accept-source-agreements --accept-package-agreements --disable-interactivity 2>&1
             if ($LASTEXITCODE -eq 0) { $ok = $true }
-            else { Write-Note "第 $i 次失败（GitHub 下载常被中断，可重试）" }
+            else { Write-Note "$i times failed" }
         }
-        if ($ok) { Write-Info "$exe 安装完成" } else { $script:Problems += "$exe 未安装" }
+        if ($ok) { Write-Info "$exe install finished" } else { $script:Problems += "$exe not installed" }
     }
 
     foreach ($exe in $WingetPkgs.Values) {
@@ -298,7 +298,6 @@ else {
         $f = Get-ChildItem (Join-Path $env:LOCALAPPDATA 'Microsoft\WinGet\Packages') -Recurse -Filter "$exe.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
         if ($f) {
             Copy-Item $f.FullName (Join-Path $ToolsDir "$exe.exe") -Force
-            Write-Info "$exe 从 winget 缓存补链"
         }
     }
 }
@@ -308,42 +307,52 @@ else {
 # ------------------------------------------------------------
 Write-Step "Nerd Font ($FontFace)"
 if ($NoFont) {
-    Write-Info '-NoFont，跳过'
+    Write-Info '-NoFont, skip'
 }
 elseif (Test-NerdFontInstalled $FontFace) {
-    Write-Info '字体已安装'
+    Write-Info 'font installed'
 }
 elseif ($FontZip -and (Test-Path $FontZip)) {
-    Write-Info "从本地包安装: $FontZip"
+    Write-Info "install from local package: $FontZip"
     $null = Install-NerdFontZip -ZipPath $FontZip -Like 'MesloLGS Nerd Font Mono*'
 }
 else {
     $omp = Get-Tool 'oh-my-posh'
     if ($omp) {
-        Write-Info '尝试 oh-my-posh font install Meslo（网络不好时可能静默失败）'
+        Write-Info 'try oh-my-posh font install Meslo'
         & $omp font install Meslo
     }
     if (Test-NerdFontInstalled $FontFace) {
-        Write-Info '字体安装完成'
+        Write-Info 'font install finished'
     }
     else {
-        Write-Warn '字体仍未安装。手动下载后重跑并带上 -FontZip：'
+        Write-Warn 'font not exists, download package manually and use option -FontZip:'
         Write-Note 'curl.exe -L -o "$env:TEMP\Meslo.zip" https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Meslo.zip'
         Write-Note 'pwsh -File ps\install.ps1 -FontZip "$env:TEMP\Meslo.zip"'
-        $script:Problems += '字体未安装'
+        $script:Problems += 'font not installed'
+    }
+
+    $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+    if ((Test-NerdFontInstalled $FontFace) -and -not $isAdmin) {
+        $hklmHas = @((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts' -ErrorAction SilentlyContinue).PSObject.Properties |
+                     Where-Object { $_.Name -like 'Meslo*' }).Count
+        if ($hklmHas -eq 0) {
+            Write-Note 'only current user installed this font, if Windows Terminal report message like "cannot find font",'
+            Write-Note "  please run this command to install as admin: pwsh -File `"$Here\install-font-admin.ps1`""
+        }
     }
 }
 
 # ------------------------------------------------------------
 #  5. Windows Terminal
 # ------------------------------------------------------------
-Write-Step 'Windows Terminal 设置'
+Write-Step 'Windows Terminal config'
 if ($NoTerminal -or -not $wtPath) {
-    Write-Info '跳过（-NoTerminal 或未找到配置）'
+    Write-Info 'skip'
 }
 else {
     $bak = Backup-File $wtPath
-    Write-Info "备份 → $bak"
+    Write-Info "backup → $bak"
     try {
         $json = (Remove-JsonComments (Get-Content -Raw -LiteralPath $wtPath)) | ConvertFrom-Json
 
@@ -392,40 +401,38 @@ else {
 
         Set-Content -LiteralPath $wtPath -Value ($json | ConvertTo-Json -Depth 100) -Encoding utf8
         $null = Get-Content -Raw -LiteralPath $wtPath | ConvertFrom-Json      # 回读校验
-        Write-Info "已合并设置（新增 $added 条 action），字号 $FontSize、opacity $Opacity、acrylic 开、配色 $SchemeName"
-        Write-Info "默认 profile 指向 $pwshExe"
+        Write-Info "set config: $FontSize / opacity $Opacity / acrylic / $SchemeName"
+        Write-Info "default profile points to $pwshExe"
     }
     catch {
-        Write-Bad "合并失败，配置未改动以外的东西：$($_.Exception.Message)"
-        Write-Note "已备份在 $bak，可直接还原"
-        $script:Problems += 'WT 设置合并失败'
+        Write-Note "config faiiled, backu p in $bak, you can rollback this config"
+        $script:Problems += 'WT config failed'
     }
 }
 
 # ------------------------------------------------------------
 #  6. 校验
 # ------------------------------------------------------------
-Write-Step '校验'
+Write-Step 'checkout'
 if (Test-Path $PROFILE.CurrentUserCurrentHost) {
     $errs = $null
     $null = [System.Management.Automation.Language.Parser]::ParseFile($PROFILE.CurrentUserCurrentHost, [ref]$null, [ref]$errs)
-    if ($errs -and $errs.Count) { Write-Bad "profile 语法错误 $($errs.Count) 处"; $script:Problems += 'profile 语法错误' }
-    else { Write-Info 'profile 语法 OK' }
+    if ($errs -and $errs.Count) { Write-Bad "profile syntax error $($errs.Count) counts"; $script:Problems += 'profile syntax error' }
+    else { Write-Info 'profile syntax check passed' }
 }
 foreach ($t in $WingetPkgs.Values) {
     $p = Get-Tool $t
-    if ($p) { Write-Info "  $t → $p" } else { Write-Info "  $t → 缺失" }
+    if ($p) { Write-Info "  $t → $p" } else { Write-Info "  $t → not exists" }
 }
-if (Test-NerdFontInstalled $FontFace) { Write-Info "  字体 $FontFace OK" } else { Write-Info "  字体 $FontFace 缺失" }
+if (Test-NerdFontInstalled $FontFace) { Write-Info "  font $FontFace check passed" } else { Write-Info "  font $FontFace not exists" }
 
-Write-Step '完成'
+Write-Step 'finished'
 if ($script:Problems.Count) {
-    Write-Warn "有 $($script:Problems.Count) 项需要处理：$($script:Problems -join '、')"
-    Write-Host '  手动下载清单（解出的 exe 丢进下面这个目录即可，profile 已把它挂在 PATH 最前）：'
+    Write-Warn "$($script:Problems.Count) problems to notice: $($script:Problems -join '、')"
+    Write-Host '  manual download list:'
     Write-Host "    $ToolsDir"
     foreach ($k in $ManualSources.Keys) { Write-Host ("    {0,-12} {1}" -f $k, $ManualSources[$k]) }
 }
 else {
-    Write-Info '全部就绪。重新打开 Windows Terminal（完全退出再开）即可看到效果'
+    Write-Info 'ready, reopen Windows Terminal to take effect'
 }
-Write-Note "回滚: pwsh -File ps\uninstall.ps1"
